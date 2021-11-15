@@ -1,0 +1,34 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: interoperability_windows_2019-
+spec:
+  entrypoint: interoperability_windows_2019
+  serviceAccountName: vault-auth
+  templates:
+  - name: interoperability_windows_2019
+    steps:
+      - - name: interoperability_windows_2019
+          templateRef:
+            name: rubikscube-collect-template
+            template: rubikscube-collect
+          arguments:
+            parameters:
+            - name: ExecutorLabel
+              value: "linux-aws-medium"
+            - name: product
+              value: "splunk"	
+            - name: test_repo_url
+              value: "https://rmoturi:xptM3sQbHVjCsM5zsNU1@cd.splunkdev.com/rmoturi/qa-readonly.git" 
+            - name: testcube_marker
+              value: " --feature=platform/interoperability --platform=windows"
+            - name: root_trigger
+              value: "Testcube/job/interoperability/job/interoperability_windows_2019"	
+            - name: root_trigger_build_no
+              value: "{{steps.interoperability_windows_2019.id}}"
+            - name: root_pytest_args
+              value: " "			  
+            outputs:
+              artifacts:
+              - name: ci_jobs-json
+                path: qa/ci_jobs.json
